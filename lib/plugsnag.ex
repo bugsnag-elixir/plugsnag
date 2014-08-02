@@ -1,0 +1,2 @@
+defmodule Plugsnag do
+end
