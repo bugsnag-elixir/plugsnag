@@ -7,7 +7,7 @@ defmodule Plugsnag.Mixfile do
       elixir: "~> 0.15.0",
       package: package,
       description: """
-        A plug that catches errors and sends them to Bugsnag]
+        A plug that catches errors and sends them to Bugsnag
       """,
      deps: deps ]
   end
@@ -23,7 +23,7 @@ defmodule Plugsnag.Mixfile do
   end
 
   defp deps do
-    [ { :bugsnag, "~> 0.0.1", github: "jarednorman/bugsnag-elixir" },
+    [ { :bugsnag, "~> 0.0.1", github: "jarednorman/bugsnag-elixir", branch: "phoenix_time" },
       { :cowboy, "~> 1.0.0" },
       { :plug, "~> 0.5.1" } ]
   end
