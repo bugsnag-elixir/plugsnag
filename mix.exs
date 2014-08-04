@@ -1,10 +1,10 @@
-defmodule Bugsnag.Mixfile do
+defmodule Plugsnag.Mixfile do
   use Mix.Project
 
   def project do
     [ app: :plugsnag,
       version: "0.0.1-dev",
-      elixir: "~> 0.14.3",
+      elixir: "~> 0.15.0",
       package: package,
       description: """
         A plug that catches errors and sends them to Bugsnag]
@@ -23,6 +23,8 @@ defmodule Bugsnag.Mixfile do
   end
 
   defp deps do
-    [ { :bugsnag, "~> 0.0.1", github: "jarednorman/bugnsag-elixir" } ]
+    [ { :bugsnag, "~> 0.0.1", github: "jarednorman/bugsnag-elixir" },
+      { :cowboy, "~> 1.0.0" },
+      { :plug, "~> 0.5.1" } ]
   end
 end
