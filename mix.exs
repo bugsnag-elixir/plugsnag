@@ -23,7 +23,7 @@ defmodule Plugsnag.Mixfile do
   end
 
   defp deps do
-    [ { :bugsnag, "~> 0.0.1", github: "jarednorman/bugsnag-elixir", branch: "phoenix_time" },
+    [ { :bugsnag, "~> 0.1.0-dev", github: "jarednorman/bugsnag-elixir", branch: "v0.1.0-dev" },
       { :cowboy, "~> 1.0.0" },
       { :plug, "~> 0.5.1" } ]
   end
