@@ -6,9 +6,11 @@ defmodule PlugsnagTest do
     :ok
   end
 
+  def conn(), do: Plug.Test.conn(:get, "/")
+
   test "it reraises the exceptions" do
     assert_raise ArithmeticError, "bad argument in arithmetic expression", fn ->
-      Plugsnag.wrap(nil, nil, fn(_conn) ->
+      Plugsnag.wrap(conn, nil, fn(_conn) ->
         1 + "test"
       end)
     end
