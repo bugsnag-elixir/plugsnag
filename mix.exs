@@ -25,6 +25,6 @@ defmodule Plugsnag.Mixfile do
   defp deps do
     [{:bugsnag, "~> 0.1.0-dev", github: "jarednorman/bugsnag-elixir", branch: "v0.1.0-dev"},
      {:cowboy, "~> 1.0.0"},
-     {:plug, "~> 0.5.1"}]
+     {:plug, "~> 0.6.0"}]
   end
 end
