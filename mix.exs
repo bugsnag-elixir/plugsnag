@@ -4,7 +4,7 @@ defmodule Plugsnag.Mixfile do
   def project do
     [app: :plugsnag,
      version: "0.0.1-dev",
-     elixir: "~> 0.15.0",
+     elixir: "~> 1.0.0-rc1",
      package: package,
      description: """
        A plug that catches errors and sends them to Bugsnag
