@@ -1,13 +1,14 @@
 defmodule Plugsnag do
-  @behaviour Plug.Wrapper
+  use Plug.Builder
 
   def init(opts), do: opts
 
-  def wrap(conn, opts, func) do
+  def call(conn, opts) do
     try do
-      func.(conn)
+      super(conn, opts)
     rescue
       exception ->
+        # FIXME: Turn this into a macro or function.
         stacktrace = System.stacktrace
         Bugsnag.report exception, stacktrace
         reraise exception, stacktrace
