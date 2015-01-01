@@ -1,0 +1,28 @@
+defmodule Plugsnag do
+  defmacro __using__(_env) do
+    quote location: :keep do
+      @before_compile Plugsnag
+    end
+  end
+
+  defmacro __before_compile__(_env) do
+    quote location: :keep do
+      defoverridable [call: 2]
+
+      def call(conn, opts) do
+        try do
+          super(conn, opts)
+        rescue
+          exception ->
+            stacktrace = System.stacktrace
+
+            exception
+            |> IO.inspect
+            |> Bugsnag.report
+
+            reraise exception, stacktrace
+        end
+      end
+    end
+  end
+end
