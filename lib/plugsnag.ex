@@ -17,7 +17,6 @@ defmodule Plugsnag do
             stacktrace = System.stacktrace
 
             exception
-            |> IO.inspect
             |> Bugsnag.report
 
             reraise exception, stacktrace
