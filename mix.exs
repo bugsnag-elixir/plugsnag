@@ -23,6 +23,6 @@ defmodule Plugsnag.Mixfile do
   end
 
   defp deps do
-    [{:bugsnag, "~> 1.0.0"}]
+    [{:bugsnag, "~> 1.0"}]
   end
 end
