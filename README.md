@@ -9,7 +9,7 @@ Just throw it in your deps in your `mix.exs`:
 
 ```elixir
   defp deps do
-    [{:plugsnag, github: "jarednorman/plugsnag"}]
+    [{:plugsnag, "~> 1.0.1"}]
   end
 ```
 
