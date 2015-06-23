@@ -17,7 +17,7 @@ defmodule Plugsnag do
             stacktrace = System.stacktrace
 
             exception
-            |> Bugsnag.report
+            |> Bugsnag.report(releaseStage: Atom.to_string(Mix.env))
 
             reraise exception, stacktrace
         end
