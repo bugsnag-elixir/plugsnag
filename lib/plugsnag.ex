@@ -17,7 +17,7 @@ defmodule Plugsnag do
             stacktrace = System.stacktrace
 
             exception
-            |> Bugsnag.report(release_stage: Atom.to_string(Mix.env))
+            |> Bugsnag.report(release_stage: System.get_env("DEPLOYMENT_ENV") || System.get_env("MIX_ENV"))
 
             reraise exception, stacktrace
         end
