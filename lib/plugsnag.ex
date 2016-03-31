@@ -14,12 +14,20 @@ defmodule Plugsnag do
           super(conn, opts)
         rescue
           exception ->
-            stacktrace = System.stacktrace
+            metadata = %{"conn" => %{
+              "query_params" => Map.get(conn, :params),
+              "assigns"      => Map.get(conn, :assigns),
+              "path_info"    => Map.get(conn, :path_info),
+              "method"       => Map.get(conn, :method),
+            }}
+            release_stage = System.get_env("DEPLOYMENT_ENV") || System.get_env("MIX_ENV")
 
-            exception
-            |> Bugsnag.report(release_stage: System.get_env("DEPLOYMENT_ENV") || System.get_env("MIX_ENV"))
+            Bugsnag.report(exception, [
+              release_stage: release_stage,
+              metadata: metadata,
+            ])
 
-            reraise exception, stacktrace
+            reraise exception, System.stacktrace
         end
       end
     end
