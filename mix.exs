@@ -24,7 +24,7 @@ defmodule Plugsnag.Mixfile do
 
   defp deps do
     [{:bugsnag, "~> 1.2"},
-     {:plug, "~> 1.1.0", only: [:test]}
+     {:plug, "~> 1.0"}
     ]
   end
 end
