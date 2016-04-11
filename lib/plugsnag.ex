@@ -3,8 +3,8 @@ defmodule Plugsnag do
     quote location: :keep do
       use Plug.ErrorHandler
 
-      defp handle_errors(_conn, %{reason: exception, stack: stack}) do
-        Bugsnag.report(exception, stack)
+      defp handle_errors(_conn, %{reason: exception, stack: _stack}) do
+        Bugsnag.report(exception, release_stage: Atom.to_string(Mix.env))
       end
     end
   end
