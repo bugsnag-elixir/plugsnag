@@ -4,7 +4,7 @@ defmodule Plugsnag do
       use Plug.ErrorHandler
 
       if :code.is_loaded(Phoenix) do
-        defp handle_errors(_conn, %{reason: %{reason: %Phoenix.Router.NoRouteError{}}}) do
+        defp handle_errors(_conn, %{reason: %Phoenix.Router.NoRouteError{}}) do
           nil
         end
       end
