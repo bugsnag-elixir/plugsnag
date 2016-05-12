@@ -4,7 +4,7 @@ defmodule Plugsnag do
       use Plug.ErrorHandler
 
       defp handle_errors(_conn, %{reason: exception}) do
-        Bugsnag.report(exception, release_stage: Atom.to_string(Mix.env))
+        Bugsnag.report(exception)
       end
     end
   end
