@@ -1,4 +1,4 @@
-# Plugsnag
+# Plugsnag [![Build Status](https://travis-ci.org/jarednorman/plugsnag.svg?branch=master)](https://travis-ci.org/jarednorman/plugsnag)
 
 Report errors in your Plug stack or whatever to [Bugsnag](https://bugsnag.com),
 because that's a super great place to send your errors.
