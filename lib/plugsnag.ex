@@ -15,8 +15,12 @@ defmodule Plugsnag do
         end
       end
 
+      defp reporter do
+        Application.get_env(:plugsnag, :reporter, Bugsnag)
+      end
+
       defp handle_errors(_conn, %{reason: exception}) do
-        Bugsnag.report(exception)
+        reporter.report(exception)
       end
     end
   end
