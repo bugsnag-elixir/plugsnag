@@ -32,7 +32,16 @@ defmodule Plugsnag do
       end
 
       defp redact(params) do
-        put_in(params, redact_config.fields, redact_config.string)
+        filtered = redact_config.fields
+                    |> Enum.filter(&Map.has_key?(params, &1))
+                    |> Enum.flat_map(&redact_field(&1))
+                    |> Enum.into(%{})
+
+        Map.merge(params, filtered)
+      end
+
+      defp redact_field(field) do
+        %{field => redact_config.string}
       end
 
       defp redact_config do
