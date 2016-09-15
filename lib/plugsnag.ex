@@ -15,7 +15,7 @@ defmodule Plugsnag do
         rescue
           exception ->
             metadata = %{"conn" => %{
-              "query_params" => Map.get(conn, :params),
+              "query_params" => Map.get(conn, :params) |> redact,
               "assigns"      => Map.get(conn, :assigns),
               "path_info"    => Map.get(conn, :path_info),
               "method"       => Map.get(conn, :method),
@@ -29,6 +29,18 @@ defmodule Plugsnag do
 
             reraise exception, System.stacktrace
         end
+      end
+
+      defp redact(params) do
+        put_in(params, redact_config.fields, redact_config.string)
+      end
+
+      defp redact_config do
+        defaults = %{fields: ~w(password), string: ~s([REDACTED])}
+
+        __MODULE__
+        |> Application.get_application
+        |> Application.get_env(:redact_config, defaults)
       end
     end
   end
