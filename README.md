@@ -29,6 +29,14 @@ defmodule YourApp.Router do
 end
 ```
 
+### Filtering Parameters
+
+By default, the `BasicErrorReportBuilder` will filter out password parameters from error reports sent to Bugsnag. You can customize this list inside your configuration:
+
+```elixir
+config :plugsnag, :filter_parameters, ~w(password password_confirmation super_sekrit)
+```
+
 ## Customizing error reporting
 
 You can also customize how an error is sent to bugsnag-elixir by passing your

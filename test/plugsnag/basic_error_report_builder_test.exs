@@ -35,4 +35,21 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
       }
     }
   end
+
+  test "filters the params defined in config" do
+    Application.put_env(:plugsnag, :filter_parameters, ~w(password receipt))
+
+    conn = conn(:post, "/", %{"password" => "secret", "user" => "foo"})
+
+    error_report = BasicErrorReportBuilder.build_error_report(%ErrorReport{}, conn)
+
+    assert %ErrorReport{
+      metadata: %{
+        request: %{
+          params: %{"password" => "[FILTERED]", "user" => "foo"}
+        }
+      }
+    } = error_report
+  end
+
 end

@@ -84,4 +84,5 @@ defmodule PlugsnagTest do
      id: "abc123"
     }
   end
+
 end
