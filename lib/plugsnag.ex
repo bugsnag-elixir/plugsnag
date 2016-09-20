@@ -32,7 +32,9 @@ defmodule Plugsnag do
             method: conn.method,
             port: conn.port,
             scheme: conn.scheme,
-            query_string: conn.query_string
+            query_string: conn.query_string,
+            client_ip: format_ip(conn.remote_ip),
+            body: conn.body_params
           }
         }
       end
