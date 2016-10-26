@@ -32,7 +32,8 @@ defmodule Plugsnag do
       end
 
       defp redact(params) do
-        filtered = redact_config.fields
+        fields = redact_config[:fields] || ~w(password)
+        filtered = fields
                     |> Enum.filter(&Map.has_key?(params, &1))
                     |> Enum.flat_map(&redact_field(&1))
                     |> Enum.into(%{})
@@ -41,15 +42,14 @@ defmodule Plugsnag do
       end
 
       defp redact_field(field) do
-        %{field => redact_config.string}
+        %{field => redact_config[:string] || ~s([REDACTED])}
       end
 
       defp redact_config do
-        defaults = %{fields: ~w(password), string: ~s([REDACTED])}
-
         __MODULE__
         |> Application.get_application
-        |> Application.get_env(:redact_config, defaults)
+        |> Application.get_env(:redact_config)
+        |> Enum.into(%{})
       end
     end
   end
