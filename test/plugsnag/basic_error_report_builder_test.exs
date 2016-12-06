@@ -37,16 +37,32 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
   end
 
   test "filters the params defined in config" do
-    Application.put_env(:plugsnag, :filter_parameters, ~w(password receipt))
+    Application.put_env(:plugsnag, :filter, params: ~w(password receipt))
 
-    conn = conn(:post, "/", %{"password" => "secret", "user" => "foo"})
+    conn = conn(:post, "/", %{"password" => "secret", "user" => "foo", "receipt" => "DATA"})
 
     error_report = BasicErrorReportBuilder.build_error_report(%ErrorReport{}, conn)
 
     assert %ErrorReport{
       metadata: %{
         request: %{
-          params: %{"password" => "[FILTERED]", "user" => "foo"}
+          params: %{"password" => "[FILTERED]", "user" => "foo", "receipt" => "[FILTERED]"}
+        }
+      }
+    } = error_report
+  end
+
+  test "filters the headers defined in config" do
+    Application.put_env(:plugsnag, :filter, headers: ~w(Authorization))
+
+    conn = conn(:post, "/", "") |> put_req_header("authorization", "Bearer SOMESECRETTOKEN")
+
+    error_report = BasicErrorReportBuilder.build_error_report(%ErrorReport{}, conn)
+
+    assert %ErrorReport{
+      metadata: %{
+        request: %{
+          headers: %{"authorization" => "[FILTERED]"}
         }
       }
     } = error_report
