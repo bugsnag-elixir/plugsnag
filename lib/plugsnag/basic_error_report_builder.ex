@@ -47,8 +47,8 @@ defmodule Plugsnag.BasicErrorReportBuilder do
 
   defp filter(field, data), do: do_filter(data, filters_for(field))
 
-  def do_filter(%{__struct__: mod} = struct, _params_to_filter) when is_atom(mod), do: struct
-  def do_filter(%{} = map, params_to_filter) do
+  defp do_filter(%{__struct__: mod} = struct, _params_to_filter) when is_atom(mod), do: struct
+  defp do_filter(%{} = map, params_to_filter) do
     Enum.into map, %{}, fn {k, v} ->
       if is_binary(k) && String.contains?(k, params_to_filter) do
         {k, "[FILTERED]"}
@@ -57,6 +57,6 @@ defmodule Plugsnag.BasicErrorReportBuilder do
       end
     end
   end
-  def do_filter([_|_] = list, params_to_filter), do: Enum.map(list, &do_filter(&1, params_to_filter))
-  def do_filter(other, _params_to_filter), do: other
+  defp do_filter([_|_] = list, params_to_filter), do: Enum.map(list, &do_filter(&1, params_to_filter))
+  defp do_filter(other, _params_to_filter), do: other
 end
