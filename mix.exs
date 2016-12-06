@@ -9,7 +9,9 @@ defmodule Plugsnag.Mixfile do
      description: """
        Bugsnag reporter for Elixir's Plug
      """,
-     deps: deps]
+     deps: deps,
+     dialyzer: [plt_add_deps: :project]
+   ]
   end
 
   def package do
@@ -24,7 +26,8 @@ defmodule Plugsnag.Mixfile do
 
   defp deps do
     [{:bugsnag, "~> 1.3"},
-     {:plug, "~> 1.0"}
+     {:plug, "~> 1.0"},
+     {:dialyxir, "~> 0.3.5", only: [:dev]}
     ]
   end
 end
