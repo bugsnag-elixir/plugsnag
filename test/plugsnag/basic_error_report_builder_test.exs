@@ -30,7 +30,8 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
           headers: %{
             "accept" => "application/json",
             "x-user-id" => "abc123"
-          }
+          },
+          client_ip: "127.0.0.1"
         }
       }
     }

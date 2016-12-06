@@ -22,7 +22,8 @@ defmodule Plugsnag.BasicErrorReportBuilder do
         scheme: conn.scheme,
         query_string: conn.query_string,
         params: filter(:params, conn.params),
-        headers: collect_req_headers(conn)
+        headers: collect_req_headers(conn),
+        client_ip: format_ip(conn.remote_ip)
       }
     }
   end
@@ -59,4 +60,10 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   end
   defp do_filter([_|_] = list, params_to_filter), do: Enum.map(list, &do_filter(&1, params_to_filter))
   defp do_filter(other, _params_to_filter), do: other
+
+  defp format_ip(ip) do
+    ip
+    |> Tuple.to_list
+    |> Enum.join(".")
+  end
 end
