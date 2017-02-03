@@ -31,7 +31,7 @@ defmodule Plugsnag do
           |> Map.delete(:__struct__)
           |> Keyword.new
 
-        apply(reporter, :report, [exception | [options]])
+        apply(reporter(), :report, [exception | [options]])
       end
     end
   end

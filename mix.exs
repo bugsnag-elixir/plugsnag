@@ -5,17 +5,18 @@ defmodule Plugsnag.Mixfile do
     [app: :plugsnag,
      version: "1.3.0-beta1",
      elixir: "~> 1.0",
-     package: package,
+     package: package(),
      description: """
        Bugsnag reporter for Elixir's Plug
      """,
-     deps: deps,
+     deps: deps(),
      dialyzer: [plt_add_deps: :project]
    ]
   end
 
   def package do
-    [contributors: ["Jared Norman"],
+    [contributors: ["Jared Norman", "Andrew Harvey"],
+     maintainers: ["Andrew Harvey"],
      licenses: ["MIT"],
      links: %{github: "https://github.com/jarednorman/plugsnag"}]
   end

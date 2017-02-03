@@ -25,7 +25,7 @@ defmodule PlugsnagTest do
 
   defmodule FakePlugsnag do
     def report(exception, options \\ []) do
-      send self, {:report, {exception, options}}
+      send self(), {:report, {exception, options}}
     end
   end
 
