@@ -16,10 +16,12 @@ defmodule Plugsnag do
         end
       end
 
-      # Phoenix turns these into 400s, so don't want to Bugsnag them, as this
-      # type of match error isn't really an unhandled exception, but a feature of
-      # Phoenix routing/controllers.
-      defp handle_errors(conn, %{reason: %Phoenix.ActionClauseError{}}), do: nil
+      if :code.is_loaded(Phoenix) do
+        # Phoenix turns these into 400s, so don't want to Bugsnag them, as this
+        # type of match error isn't really an unhandled exception, but a feature of
+        # Phoenix routing/controllers.
+        defp handle_errors(conn, %{reason: %Phoenix.ActionClauseError{}}), do: nil
+      end
 
       defp handle_errors(conn, %{reason: exception}) do
         error_report_builder = unquote(
