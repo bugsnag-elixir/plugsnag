@@ -17,8 +17,19 @@ Then you'll need to configure it with your API key as
 per [the bugsnag-elixir
 docs](https://github.com/jarednorman/bugsnag-elixir).
 
-Now you'll need to call `Bugsnag.start` to warm up the card, and then `use` it,
-for example in your `Phoenix.Router`.
+If you're using Elixir < 1.4 make sure that `plugsnag` and `bugsnag` apps are started in your mix.exs. If you are using Elixir 1.4, the applications will be automatically started because they are dependencies.
+
+For example:
+
+```elixir
+def application do
+    [mod: {MyApp, []},
+     applications: [:logger, :plugsnag, :bugsnag]
+    ]
+  end
+```
+
+To use the plug, `use` it in your router. For example in an Phoenix app:
 
 ```elixir
 defmodule YourApp.Router do
