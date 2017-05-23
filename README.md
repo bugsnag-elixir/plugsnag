@@ -17,7 +17,7 @@ Then you'll need to configure it with your API key as
 per [the bugsnag-elixir
 docs](https://github.com/jarednorman/bugsnag-elixir).
 
-If you're using Elixir < 1.4 make sure that `plugsnag` and `bugsnag` apps are started in your mix.exs.
+If you're using Elixir < 1.4 make sure that `plugsnag` and `bugsnag` apps are started in your mix.exs. If you are using Elixir 1.4, the applications will be automatically started because they are dependencies.
 
 For example:
 
