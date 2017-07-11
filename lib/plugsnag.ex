@@ -25,14 +25,17 @@ defmodule Plugsnag do
           )
         )
 
-        options =
+        options = build_options(error_report_builder, conn, exception)
+        apply(reporter(), :report, [exception | [options]])
+      end
+
+      defp build_options(error_report_builder, conn, _exception) do
           %Plugsnag.ErrorReport{}
           |> error_report_builder.build_error_report(conn)
           |> Map.delete(:__struct__)
           |> Keyword.new
-
-        apply(reporter(), :report, [exception | [options]])
       end
+      defoverridable [build_options: 3]
     end
   end
 
