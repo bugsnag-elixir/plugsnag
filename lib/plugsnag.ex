@@ -28,7 +28,7 @@ defmodule Plugsnag do
         options =
           %Plugsnag.ErrorReport{}
           |> error_report_builder.build_error_report(conn)
-          |> Map.delete(:__struct__)
+          |> Map.from_struct
           |> Keyword.new
 
         apply(reporter(), :report, [exception | [options]])
