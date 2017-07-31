@@ -85,4 +85,48 @@ defmodule PlugsnagTest do
     }
   end
 
+  test "allows modifying bugsnag report options before it's sent and include exception" do
+    defmodule TestErrorReportBuilderOverride do
+      @behaviour Plugsnag.ErrorReportBuilder
+
+      def build_error_report(error_report, conn, exception) do
+        user_info =  %{
+          id: conn |> get_req_header("x-user-id") |> List.first
+        }
+
+        error_report
+        |> Map.put(:user, user_info)
+        |> Map.put(:custom_grouping_hash, to_string(exception.__struct__))
+      end
+    end
+
+    defmodule TestPlugsnagCallbackPlugOverride do
+      use Plugsnag, error_report_builder: TestErrorReportBuilderOverride
+      use ErrorRaisingPlug
+
+      defp build_options(error_report_builder, conn, exception) do
+        %Plugsnag.ErrorReport{}
+        |> error_report_builder.build_error_report(conn, exception)
+        |> Map.delete(:__struct__)
+        |> Keyword.new
+      end
+    end
+
+    conn = conn(:get, "/")
+
+    conn =
+      conn
+      |> put_req_header("x-user-id", "abc123")
+
+    catch_error TestPlugsnagCallbackPlugOverride.call(conn, [])
+    assert_received {:report, {%TestException{}, options}}
+
+    exception_struct = Keyword.get(options, :custom_grouping_hash)
+    assert exception_struct == to_string(PlugsnagTest.TestException)
+
+    assert Keyword.get(options, :user) == %{
+     id: "abc123"
+    }
+  end
+
 end
