@@ -45,7 +45,15 @@ end
 By default, the `BasicErrorReportBuilder` will filter out password parameters from error reports sent to Bugsnag. You can customize this list inside your configuration:
 
 ```elixir
-config :plugsnag, :filter_parameters, ~w(password password_confirmation super_sekrit)
+config :plugsnag, :filter, ~w(password password_confirmation super_sekrit)
+```
+
+### Filtering Headers
+
+By default, the `BasicErrorReportBuilder` will not filter out any headers from error reports sent to Bugsnag. You can add excluded headers by customizing the filter inside your configuration:
+
+```elixir
+config :plugsnag, :filter, ["password", headers: ["cookie", "another_sekrit"]]
 ```
 
 ## Customizing error reporting
