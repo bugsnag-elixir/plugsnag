@@ -23,7 +23,8 @@ defmodule Plugsnag.BasicErrorReportBuilder do
         query_string: conn.query_string,
         params: filter(:params, conn.params),
         headers: collect_req_headers(conn),
-        client_ip: format_ip(conn.remote_ip)
+        client_ip: format_ip(conn.remote_ip),
+        request_id: get_request_id(conn),
       }
     }
   end
@@ -65,5 +66,11 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     ip
     |> Tuple.to_list
     |> Enum.join(".")
+  end
+
+  defp get_request_id(conn) do
+    conn
+    |> Plug.Conn.get_resp_header("x-request-id")
+    |> List.first
   end
 end
