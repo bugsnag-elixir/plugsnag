@@ -32,7 +32,7 @@ defmodule Plugsnag do
       end
 
       defp redact(params) do
-        fields = redact_config[:fields] || ~w(password)
+        fields = String.split(redact_config[:fields]) || ~w(password)
         filtered = fields
                     |> Enum.filter(&Map.has_key?(params, &1))
                     |> Enum.flat_map(&redact_field(&1))
