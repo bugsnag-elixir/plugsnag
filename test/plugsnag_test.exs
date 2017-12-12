@@ -3,7 +3,7 @@ defmodule PlugsnagTest do
   use Plug.Test
 
   defmodule TestException do
-    defexception plug_status: 403, message: "oops"
+    defexception plug_status: 503, message: "oops"
   end
 
   defmodule ErrorRaisingPlug do
