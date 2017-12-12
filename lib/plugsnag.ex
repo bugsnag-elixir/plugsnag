@@ -4,10 +4,9 @@ defmodule Plugsnag do
       use Plug.ErrorHandler
       import Plugsnag
 
-      if :code.is_loaded(Phoenix) do
-        defp handle_errors(_conn, %{reason: %Phoenix.Router.NoRouteError{}}) do
-          nil
-        end
+      # We don't want to bugsnag for errors which have plug_status and plug_status is valid < 500
+      defp handle_errors(_conn, %{reason: %{plug_status: plug_status}}) when plug_status < 500 do
+        nil
       end
 
       if :code.is_loaded(Ecto) do
