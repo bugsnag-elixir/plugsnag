@@ -11,6 +11,11 @@ defmodule Plugsnag do
 
   def handle_errors(conn, assigns, opts \\ [])
 
+  # We don't want to bugsnag for errors which have plug_status and plug_status is valid < 500
+  def handle_errors(_conn, %{reason: %{plug_status: plug_status}}) when plug_status < 500 do
+    nil
+  end
+
   def handle_errors(conn, %{reason: exception, kind: :error} = assigns, opts) do
     # Only handle exceptions that get rendered as an HTTP 5xx status
     if Plug.Exception.status(exception) >= 500 do
@@ -21,6 +26,7 @@ defmodule Plugsnag do
   def handle_errors(conn, %{reason: _exception} = assigns, opts) do
     report_error(conn, assigns, opts)
   end
+
 
   defp report_error(conn, %{reason: exception, stack: stack}, opts) do
     error_report_builder =
