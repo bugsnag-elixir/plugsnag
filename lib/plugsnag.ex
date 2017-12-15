@@ -4,18 +4,25 @@ defmodule Plugsnag do
       use Plug.ErrorHandler
       import Plugsnag
 
-      # We don't want to bugsnag for errors which have plug_status and plug_status is valid < 500
-      defp handle_errors(_conn, %{reason: %{plug_status: plug_status}}) when plug_status < 500 do
-        nil
-      end
-
-      if :code.is_loaded(Ecto) do
-        defp handle_errors(conn, %{reason: %Ecto.NoResultsError{}}) do
+      defp handle_errors(conn, %{reason: exception, kind: :error} = assigns) do
+        # Ignore exceptions that don't get rendered as an HTTP 5xx status.
+        # These don't really represent unhandled exceptions, and so don't
+        # make sense to be sent off to Bugsnag.
+        # To extend this behaviour to an otherwise unhandled exception type,
+        # provide an implementation of the Plug.Exception protocol for your
+        # exception type.
+        if Plug.Exception.status(exception) < 500 do
           nil
+        else
+          do_handle_errors(conn, assigns)
         end
       end
 
-      defp handle_errors(conn, %{reason: exception}) do
+      defp handle_errors(conn, %{reason: _exception} = assigns) do
+        do_handle_errors(conn, assigns)
+      end
+
+      defp do_handle_errors(conn, %{reason: exception}) do
         error_report_builder = unquote(
           Keyword.get(
             options,
