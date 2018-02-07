@@ -12,6 +12,7 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
       conn
       |> put_req_header("accept", "application/json")
       |> put_req_header("x-user-id", "abc123")
+      |> put_resp_header("x-request-id", "def456")
 
     error_report = BasicErrorReportBuilder.build_error_report(
       %ErrorReport{}, conn
@@ -27,9 +28,13 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
           scheme: :http,
           query_string: "hello=computer",
           params: %{"hello" => "computer"},
-          headers: %{
+          req_headers: %{
             "accept" => "application/json",
             "x-user-id" => "abc123"
+          },
+          resp_headers: %{
+            "x-request-id" => "def456",
+            "cache-control" => "max-age=0, private, must-revalidate"
           },
           client_ip: "127.0.0.1"
         }
@@ -63,7 +68,7 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
     assert %ErrorReport{
       metadata: %{
         request: %{
-          headers: %{"authorization" => "[FILTERED]"}
+          req_headers: %{"authorization" => "[FILTERED]"}
         }
       }
     } = error_report

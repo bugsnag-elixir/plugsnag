@@ -22,15 +22,16 @@ defmodule Plugsnag.BasicErrorReportBuilder do
         scheme: conn.scheme,
         query_string: conn.query_string,
         params: filter(:params, conn.params),
-        headers: collect_req_headers(conn),
+        req_headers: collect_headers(conn, :req),
+        resp_headers: collect_headers(conn, :resp),
         client_ip: format_ip(conn.remote_ip)
       }
     }
   end
 
-  defp collect_req_headers(conn) do
-    headers = Enum.reduce(conn.req_headers, %{}, fn({header, _}, acc) ->
-      Map.put(acc, header, Plug.Conn.get_req_header(conn, header) |> List.first)
+  defp collect_headers(conn, type) do
+    headers = Enum.reduce(Map.get(conn, :"#{type}_headers"), %{}, fn({header, _}, acc) ->
+      Map.put(acc, header, apply(Plug.Conn, :"get_#{type}_header", [conn, header]) |> List.first)
     end)
     filter(:headers, headers)
   end
