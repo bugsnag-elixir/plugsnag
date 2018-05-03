@@ -18,6 +18,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
       request: %{
         request_path: conn.request_path,
         method: conn.method,
+        url: get_full_url(conn),
         port: conn.port,
         scheme: conn.scheme,
         query_string: conn.query_string,
@@ -33,6 +34,14 @@ defmodule Plugsnag.BasicErrorReportBuilder do
       Map.put(acc, header, Plug.Conn.get_req_header(conn, header) |> List.first)
     end)
     filter(:headers, headers)
+  end
+
+  defp get_full_url(conn) do
+    base = "#{conn.scheme}://#{conn.host}#{conn.request_path}"
+    case conn.query_string do
+      "" -> base
+      qs -> "#{base}?#{qs}"
+    end
   end
 
   defp filters_for(:headers) do
