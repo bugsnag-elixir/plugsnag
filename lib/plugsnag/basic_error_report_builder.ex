@@ -42,7 +42,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   defp filters_for(field), do: do_filters_for(field)
 
   defp do_filters_for(field) do
-    Application.get_env(:plugsnag, :filter, @default_filter_parameters)
+    Application.get_env(:plugsnag, :filter_parameters, @default_filter_parameters)
     |> Keyword.get(field, [])
   end
 
