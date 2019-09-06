@@ -3,8 +3,8 @@ defmodule Plugsnag.Mixfile do
 
   def project do
     [app: :plugsnag,
-     version: "1.3.0",
-     elixir: "~> 1.0",
+     version: "1.4.0",
+     elixir: "~> 1.3",
      package: package(),
      description: """
        Bugsnag reporter for Elixir's Plug
