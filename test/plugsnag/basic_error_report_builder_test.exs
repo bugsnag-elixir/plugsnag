@@ -23,6 +23,7 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
         request: %{
           request_path: "/",
           method: "GET",
+          url: "http://#{conn.host}/?hello=computer",
           port: 80,
           scheme: :http,
           query_string: "hello=computer",

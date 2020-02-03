@@ -26,9 +26,9 @@ defmodule Plugsnag.Mixfile do
   end
 
   defp deps do
-    [{:bugsnag, "~> 1.3"},
+    [{:bugsnag, "~> 1.3 or ~> 2.0"},
      {:plug, "~> 1.0"},
-     {:ex_doc, ">= 0.0.0", only: :dev},
+     {:ex_doc, "~> 0.19", only: :dev},
      {:dialyxir, "~> 0.3.5", only: [:dev]}
     ]
   end
