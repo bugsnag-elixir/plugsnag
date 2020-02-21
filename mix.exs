@@ -4,7 +4,7 @@ defmodule Plugsnag.Mixfile do
   def project do
     [app: :plugsnag,
      version: "1.4.1",
-     elixir: "~> 1.0",
+     elixir: "~> 1.3",
      package: package(),
      description: """
        Bugsnag reporter for Elixir's Plug
@@ -26,9 +26,9 @@ defmodule Plugsnag.Mixfile do
   end
 
   defp deps do
-    [{:bugsnag, "~> 1.3"},
+    [{:bugsnag, "~> 1.3 or ~> 2.0"},
      {:plug, "~> 1.0"},
-     {:ex_doc, ">= 0.0.0", only: :dev},
+     {:ex_doc, "~> 0.19", only: :dev},
      {:dialyxir, "~> 0.3.5", only: [:dev]}
     ]
   end
