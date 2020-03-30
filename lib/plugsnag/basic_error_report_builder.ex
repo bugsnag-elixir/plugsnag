@@ -21,7 +21,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
         url: get_full_url(conn),
         port: conn.port,
         scheme: conn.scheme,
-        query_string: conn.query_string,
+        query_string: filter(:params, conn.query_string),
         params: filter(:params, conn.params),
         headers: collect_req_headers(conn),
         client_ip: format_ip(conn.remote_ip)
