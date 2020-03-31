@@ -58,15 +58,17 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     |> Keyword.get(field, [])
   end
 
-  defp filter(field, data) do
-    IO.inspect "###########"
-    IO.inspect "###########"
-    IO.inspect data
-    IO.inspect "###########"
-    IO.inspect "###########"
-    do_filter(data, filters_for(field))
+  defp filter(:query_string, data) do
+    data
+    |> String.split("&")
+    |> Enum.flat_map(fn x -> x |> String.split("=") end)
+    |> Enum.chunk(2)
+    |> Enum.into(%{}, fn [a, b] -> {a, b} end)
+    |> do_filter(filters_for(field))
+    |> Enum.map(fn ({k, v}) -> "#{k}=#{v}" end)
+    |> Enum.join("&")
   end
-#  defp filter(field, data), do: do_filter(data, filters_for(field))
+  defp filter(field, data), do: do_filter(data, filters_for(field))
 
   defp do_filter(%{__struct__: mod} = struct, _params_to_filter) when is_atom(mod), do: struct
 
