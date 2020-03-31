@@ -21,7 +21,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
         url: get_full_url(conn),
         port: conn.port,
         scheme: conn.scheme,
-        query_string: conn.query_string,
+        query_string: filter(:query_string, conn.query_string),
         params: filter(:params, conn.params),
         headers: collect_req_headers(conn),
         client_ip: format_ip(conn.remote_ip)
@@ -58,7 +58,15 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     |> Keyword.get(field, [])
   end
 
-  defp filter(field, data), do: do_filter(data, filters_for(field))
+  defp filter(field, data) do
+    IO.inspect "###########"
+    IO.inspect "###########"
+    IO.inspect data
+    IO.inspect "###########"
+    IO.inspect "###########"
+    do_filter(data, filters_for(field))
+  end
+#  defp filter(field, data), do: do_filter(data, filters_for(field))
 
   defp do_filter(%{__struct__: mod} = struct, _params_to_filter) when is_atom(mod), do: struct
 
