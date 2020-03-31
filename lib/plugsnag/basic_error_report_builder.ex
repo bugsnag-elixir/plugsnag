@@ -56,16 +56,22 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   end
 
   defp filter(:query_string, data) when is_binary(data) and length(data) > 0 do
-    IO.inspect "########"
-    IO.inspect data
-    IO.inspect "########"
-    data
+    {_, data} = data
     |> String.split("&")
-    |> Enum.flat_map(fn x -> x |> String.split("=") end)
-    |> Enum.chunk_every(2)
-    |> Enum.into(%{}, fn [a, b] -> {a, b} end)
+    |> Enum.map_reduce(%{ unknown: [] }, fn x, acc ->
+      case x |> String.split("=") do
+        [a, b] -> {x, acc |> Map.put(a, b)}
+        [v]     -> {x, acc |> Map.put(:unknown, [v | acc[:unknown]])}
+      end
+    end)
+    data
     |> do_filter(filters_for(:params))
-    |> Enum.map(fn ({k, v}) -> "#{k}=#{v}" end)
+    |> Enum.map(fn {k, v} ->
+        case k do
+          :unknown -> v |> Enum.join("&")
+          _ -> k <> "=" <> v
+        end
+      end)
     |> Enum.join("&")
   end
   defp filter(field, data), do: do_filter(data, filters_for(field))
