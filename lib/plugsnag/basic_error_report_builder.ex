@@ -18,7 +18,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
       request: %{
         request_path: conn.request_path,
         method: conn.method,
-        url: get_full_url(conn),
+        url: filter(:query_string, get_full_url(conn)),
         port: conn.port,
         scheme: conn.scheme,
         query_string: filter(:query_string, conn.query_string),
