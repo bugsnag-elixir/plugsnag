@@ -58,7 +58,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     |> Keyword.get(field, [])
   end
 
-  defp filter(:query_string, data) when is_binary(data) do
+  defp filter(:query_string, data) when is_binary(data) and length(data) > 0 do
     IO.inspect "########"
     IO.inspect data
     IO.inspect "########"
