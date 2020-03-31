@@ -59,7 +59,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     data
     |> String.split("&")
     |> Enum.flat_map(fn x -> x |> String.split("=") end)
-    |> Enum.chunk(2)
+    |> Enum.chunk_every(2)
     |> Enum.into(%{}, fn [a, b] -> {a, b} end)
     |> do_filter(filters_for(:params))
     |> Enum.map(fn ({k, v}) -> "#{k}=#{v}" end)
