@@ -61,7 +61,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     |> Enum.map_reduce(%{ unknown: [] }, fn x, acc ->
       case x |> String.split("=") do
         [a, b] -> {x, acc |> Map.put(a, b)}
-        [v]     -> {x, acc |> Map.put(:unknown, [v | acc[:unknown]])}
+        [v]    -> {x, acc |> Map.put(:unknown, [v | acc[:unknown]])}
       end
     end)
     data
