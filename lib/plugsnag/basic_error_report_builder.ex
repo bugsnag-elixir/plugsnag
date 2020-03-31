@@ -58,7 +58,10 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     |> Keyword.get(field, [])
   end
 
-  defp filter(:query_string, data) do
+  defp filter(:query_string, data) when is_binary(data) do
+    IO.inspect "########"
+    IO.inspect data
+    IO.inspect "########"
     data
     |> String.split("&")
     |> Enum.flat_map(fn x -> x |> String.split("=") end)
