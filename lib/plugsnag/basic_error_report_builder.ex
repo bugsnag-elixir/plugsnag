@@ -60,9 +60,9 @@ defmodule Plugsnag.BasicErrorReportBuilder do
 
   defp filter(:query_string, data) when is_binary(data) do
     data
-    |> URI.decode_query
+    |> URI.decode_query()
     |> do_filter(filters_for(:params))
-    |> URI.encode_query
+    |> URI.encode_query()
   end
   defp filter(field, data), do: do_filter(data, filters_for(field))
 
