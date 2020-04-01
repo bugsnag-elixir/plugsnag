@@ -70,4 +70,36 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
              }
            } = error_report
   end
+
+  test "filters the query string" do
+    Application.put_env(:plugsnag, :filter, params: ~w(signature))
+
+    conn = conn(:post, "/?signature=secret", "")
+
+    error_report = BasicErrorReportBuilder.build_error_report(%ErrorReport{}, conn)
+
+    assert %ErrorReport{
+      metadata: %{
+        request: %{
+          query_string: "signature=%5BFILTERED%5D",
+        }
+      }
+    } = error_report
+  end
+
+  test "filters the request url" do
+    Application.put_env(:plugsnag, :filter, params: ~w(signature))
+
+    conn = conn(:post, "/?signature=secret", "")
+
+    error_report = BasicErrorReportBuilder.build_error_report(%ErrorReport{}, conn)
+
+    assert %ErrorReport{
+      metadata: %{
+        request: %{
+        url: "http://www.example.com/?signature=%5BFILTERED%5D"
+        }
+      }
+    } = error_report
+  end
 end
