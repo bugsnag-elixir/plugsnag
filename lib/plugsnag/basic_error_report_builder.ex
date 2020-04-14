@@ -21,7 +21,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
         url: get_full_url(conn),
         port: conn.port,
         scheme: conn.scheme,
-        query_string: conn.query_string,
+        query_string: filter(:query_string, conn.query_string),
         params: filter(:params, conn.params),
         headers: collect_req_headers(conn),
         client_ip: format_ip(conn.remote_ip)
@@ -40,7 +40,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     base = "#{conn.scheme}://#{conn.host}#{conn.request_path}"
     case conn.query_string do
       "" -> base
-      qs -> "#{base}?#{qs}"
+      qs -> "#{base}?#{filter(:query_string, qs)}"
     end
   end
 
@@ -55,6 +55,12 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     |> Keyword.get(field, [])
   end
 
+  defp filter(:query_string, data) when is_binary(data) do
+    data
+    |> URI.decode_query()
+    |> do_filter(filters_for(:params))
+    |> URI.encode_query()
+  end
   defp filter(field, data), do: do_filter(data, filters_for(field))
 
   defp do_filter(%{__struct__: mod} = struct, _params_to_filter) when is_atom(mod), do: struct
