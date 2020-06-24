@@ -18,7 +18,7 @@ defmodule Plugsnag.Mixfile do
     [contributors: ["Jared Norman", "Andrew Harvey"],
      maintainers: ["Andrew Harvey"],
      licenses: ["MIT"],
-     links: %{github: "https://github.com/jarednorman/plugsnag"}]
+     links: %{github: "https://github.com/bugsnag-elixir/plugsnag"}]
   end
 
   def application do
