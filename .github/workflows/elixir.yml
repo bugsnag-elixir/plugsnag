@@ -40,6 +40,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Restore old mix.lock
+      if: startsWith(matrix.elixir, '1.6')
+      run: cp mix.lock.pre-1.7 mix.lock
+
     - name: Install dependencies
       run: |-
         mix local.rebar --force
