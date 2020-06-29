@@ -1,4 +1,4 @@
-# Plugsnag [![Build Status](https://travis-ci.org/jarednorman/plugsnag.svg?branch=master)](https://travis-ci.org/jarednorman/plugsnag)
+# Plugsnag ![Elixir CI](https://github.com/bugsnag-elixir/plugsnag/workflows/Elixir%20CI/badge.svg)
 
 Report errors in your Plug stack or whatever to [Bugsnag](https://bugsnag.com),
 because that's a super great place to send your errors.
