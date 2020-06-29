@@ -1,4 +1,7 @@
-# Plugsnag ![Elixir CI](https://github.com/bugsnag-elixir/plugsnag/workflows/Elixir%20CI/badge.svg)
+# Plugsnag 
+![Elixir CI](https://github.com/bugsnag-elixir/plugsnag/workflows/Elixir%20CI/badge.svg)
+[![Plugsnag version](https://img.shields.io/hexpm/v/plugsnag.svg)](https://hex.pm/packages/plugsnag)
+[![Hex.pm](https://img.shields.io/hexpm/dt/plugsnag.svg)](https://hex.pm/packages/plugsnag)
 
 Report errors in your Plug stack or whatever to [Bugsnag](https://bugsnag.com),
 because that's a super great place to send your errors.
