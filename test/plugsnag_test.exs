@@ -36,7 +36,7 @@ defmodule PlugsnagTest do
   test "Raising an error on failure" do
     conn = conn(:get, "/")
 
-    assert_raise TestException, "oops", fn ->
+    assert_raise Plug.Conn.WrapperError, "** (PlugsnagTest.TestException) oops", fn ->
       TestPlug.call(conn, [])
     end
 
