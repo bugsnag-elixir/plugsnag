@@ -3,16 +3,36 @@ defmodule PlugsnagTest do
   use Plug.Test
 
   defmodule TestException do
-    defexception plug_status: 403, message: "oops"
+    defexception plug_status: 503, message: "oops"
+  end
+
+  defmodule NotFoundException do
+    defexception plug_status: 404, message: "not found"
   end
 
   defmodule ErrorRaisingPlug do
     defmacro __using__(_env) do
       quote do
         def call(conn, _opts) do
-          raise Plug.Conn.WrapperError, conn: conn,
-          kind: :error, stack: System.stacktrace,
-          reason: TestException.exception([])
+          raise Plug.Conn.WrapperError,
+            conn: conn,
+            kind: :error,
+            stack: System.stacktrace(),
+            reason: TestException.exception([])
+        end
+      end
+    end
+  end
+
+  defmodule NotFoundRaisingPlug do
+    defmacro __using__(_env) do
+      quote do
+        def call(conn, _opts) do
+          raise Plug.Conn.WrapperError,
+            conn: conn,
+            kind: :error,
+            stack: System.stacktrace(),
+            reason: NotFoundException.exception([])
         end
       end
     end
@@ -23,9 +43,14 @@ defmodule PlugsnagTest do
     use ErrorRaisingPlug
   end
 
+  defmodule NotFoundPlug do
+    use Plugsnag
+    use NotFoundRaisingPlug
+  end
+
   defmodule FakePlugsnag do
     def report(exception, options \\ []) do
-      send self(), {:report, {exception, options}}
+      send(self(), {:report, {exception, options}})
     end
   end
 
@@ -33,56 +58,69 @@ defmodule PlugsnagTest do
     Application.put_env(:plugsnag, :reporter, FakePlugsnag)
   end
 
-  test "Raising an error on failure" do
-    conn = conn(:get, "/")
+  describe "5xx exception" do
+    test "Raising an error on failure" do
+      conn = conn(:get, "/")
 
-    assert_raise Plug.Conn.WrapperError, "** (PlugsnagTest.TestException) oops", fn ->
-      TestPlug.call(conn, [])
-    end
-
-    assert_received {:report, {%TestException{}, _}}
-  end
-
-  test "includes connection metadata in the report" do
-    conn = conn(:get, "/?hello=computer")
-
-    catch_error TestPlug.call(conn, [])
-    assert_received {:report, {%TestException{}, options}}
-    metadata = Keyword.get(options, :metadata)
-
-    assert get_in(metadata, [:request,:query_string]) == "hello=computer"
-  end
-
-  test "allows modifying bugsnag report options before it's sent" do
-    defmodule TestErrorReportBuilder do
-      @behaviour Plugsnag.ErrorReportBuilder
-
-      def build_error_report(error_report, conn) do
-        user_info =  %{
-          id: conn |> get_req_header("x-user-id") |> List.first
-        }
-
-        %{error_report | user: user_info}
+      assert_raise Plug.Conn.WrapperError, "** (PlugsnagTest.TestException) oops", fn ->
+        TestPlug.call(conn, [])
       end
+
+      assert_received {:report, {%TestException{}, _}}
     end
 
-    defmodule TestPlugsnagCallbackPlug do
-      use Plugsnag, error_report_builder: TestErrorReportBuilder
-      use ErrorRaisingPlug
+    test "includes connection metadata in the report" do
+      conn = conn(:get, "/?hello=computer")
+
+      catch_error(TestPlug.call(conn, []))
+      assert_received {:report, {%TestException{}, options}}
+      metadata = Keyword.get(options, :metadata)
+
+      assert get_in(metadata, [:request, :query_string]) == "hello=computer"
     end
 
-    conn = conn(:get, "/")
+    test "allows modifying bugsnag report options before it's sent" do
+      defmodule TestErrorReportBuilder do
+        @behaviour Plugsnag.ErrorReportBuilder
 
-    conn =
-      conn
-      |> put_req_header("x-user-id", "abc123")
+        def build_error_report(error_report, conn) do
+          user_info = %{
+            id: conn |> get_req_header("x-user-id") |> List.first()
+          }
 
-    catch_error TestPlugsnagCallbackPlug.call(conn, [])
-    assert_received {:report, {%TestException{}, options}}
+          %{error_report | user: user_info}
+        end
+      end
 
-    assert Keyword.get(options, :user) == %{
-     id: "abc123"
-    }
+      defmodule TestPlugsnagCallbackPlug do
+        use Plugsnag, error_report_builder: TestErrorReportBuilder
+        use ErrorRaisingPlug
+      end
+
+      conn = conn(:get, "/")
+
+      conn =
+        conn
+        |> put_req_header("x-user-id", "abc123")
+
+      catch_error(TestPlugsnagCallbackPlug.call(conn, []))
+      assert_received {:report, {%TestException{}, options}}
+
+      assert Keyword.get(options, :user) == %{
+               id: "abc123"
+             }
+    end
   end
 
+  describe "4xx exception" do
+    test "Raising an error on failure" do
+      conn = conn(:get, "/")
+
+      assert_raise Plug.Conn.WrapperError, "** (PlugsnagTest.NotFoundException) not found", fn ->
+        NotFoundPlug.call(conn, [])
+      end
+
+      refute_receive {:report, {%NotFoundException{}, _}}, 100
+    end
+  end
 end
