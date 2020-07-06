@@ -69,6 +69,27 @@ defmodule PlugsnagTest do
       assert_received {:report, {%TestException{}, _}}
     end
 
+    test "calling Plugsnag.handle_errors explicitly" do
+      defmodule ExtendedPlug do
+        use Plug.ErrorHandler
+        use ErrorRaisingPlug
+
+        defp handle_errors(conn, %{reason: _exception} = assigns) do
+          send(self(), :custom_handle)
+          Plugsnag.handle_errors(conn, assigns)
+        end
+      end
+
+      conn = conn(:get, "/")
+
+      assert_raise Plug.Conn.WrapperError, "** (PlugsnagTest.TestException) oops", fn ->
+        ExtendedPlug.call(conn, [])
+      end
+
+      assert_received :custom_handle
+      assert_received {:report, {%TestException{}, _}}
+    end
+
     test "includes connection metadata in the report" do
       conn = conn(:get, "/?hello=computer")
 
