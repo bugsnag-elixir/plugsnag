@@ -14,10 +14,12 @@ defmodule PlugsnagTest do
     defmacro __using__(_env) do
       quote do
         def call(conn, _opts) do
+          {:current_stacktrace, [_ | stacktrace]} = Process.info(self(), :current_stacktrace)
+
           raise Plug.Conn.WrapperError,
             conn: conn,
             kind: :error,
-            stack: System.stacktrace(),
+            stack: stacktrace,
             reason: TestException.exception([])
         end
       end
@@ -28,10 +30,12 @@ defmodule PlugsnagTest do
     defmacro __using__(_env) do
       quote do
         def call(conn, _opts) do
+          {:current_stacktrace, [_ | stacktrace]} = Process.info(self(), :current_stacktrace)
+
           raise Plug.Conn.WrapperError,
             conn: conn,
             kind: :error,
-            stack: System.stacktrace(),
+            stack: stacktrace,
             reason: NotFoundException.exception([])
         end
       end
