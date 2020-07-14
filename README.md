@@ -30,7 +30,7 @@ defmodule YourApp.Router do
 end
 ```
 
-If you want to define your own `handle_error` functions using [Plug.ErrorHandler](https://hexdocs.pm/plug/Plug.ErrorHandler.html), then you can call `Plugsnag.handle_errors/{2,3}` directly.
+If you want to define your own `handle_errors` functions using [Plug.ErrorHandler](https://hexdocs.pm/plug/Plug.ErrorHandler.html), then you can call `Plugsnag.handle_errors/{2,3}` directly.
 
 ```elixir
 defmodule YourApp.Router do
