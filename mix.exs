@@ -5,7 +5,7 @@ defmodule Plugsnag.Mixfile do
     [
       app: :plugsnag,
       version: "1.5.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.8",
       package: package(),
       description: "Bugsnag reporter for Elixir's Plug",
       deps: deps(),
@@ -20,10 +20,6 @@ defmodule Plugsnag.Mixfile do
       licenses: ["MIT"],
       links: %{github: "https://github.com/bugsnag-elixir/plugsnag"}
     ]
-  end
-
-  def application do
-    [applications: []]
   end
 
   defp deps do
