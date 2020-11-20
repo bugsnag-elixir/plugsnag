@@ -12,7 +12,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   defp build_metadata(conn) do
     conn =
       conn
-      |> Plug.Conn.fetch_query_params
+      |> Plug.Conn.fetch_query_params()
 
     %{
       request: %{
@@ -30,14 +30,17 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   end
 
   defp collect_req_headers(conn) do
-    headers = Enum.reduce(conn.req_headers, %{}, fn({header, _}, acc) ->
-      Map.put(acc, header, Plug.Conn.get_req_header(conn, header) |> List.first)
-    end)
+    headers =
+      Enum.reduce(conn.req_headers, %{}, fn {header, _}, acc ->
+        Map.put(acc, header, Plug.Conn.get_req_header(conn, header) |> List.first())
+      end)
+
     filter(:headers, headers)
   end
 
   defp get_full_url(conn) do
     base = "#{conn.scheme}://#{conn.host}#{conn.request_path}"
+
     case conn.query_string do
       "" -> base
       qs -> "#{base}?#{qs}"
@@ -58,21 +61,25 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   defp filter(field, data), do: do_filter(data, filters_for(field))
 
   defp do_filter(%{__struct__: mod} = struct, _params_to_filter) when is_atom(mod), do: struct
+
   defp do_filter(%{} = map, params_to_filter) do
-    Enum.into map, %{}, fn {k, v} ->
+    Enum.into(map, %{}, fn {k, v} ->
       if is_binary(k) && String.contains?(k, params_to_filter) do
         {k, "[FILTERED]"}
       else
         {k, do_filter(v, params_to_filter)}
       end
-    end
+    end)
   end
-  defp do_filter([_|_] = list, params_to_filter), do: Enum.map(list, &do_filter(&1, params_to_filter))
+
+  defp do_filter([_ | _] = list, params_to_filter),
+    do: Enum.map(list, &do_filter(&1, params_to_filter))
+
   defp do_filter(other, _params_to_filter), do: other
 
   defp format_ip(ip) do
     ip
-    |> Tuple.to_list
+    |> Tuple.to_list()
     |> Enum.join(".")
   end
 end

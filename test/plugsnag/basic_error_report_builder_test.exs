@@ -13,29 +13,30 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
       |> put_req_header("accept", "application/json")
       |> put_req_header("x-user-id", "abc123")
 
-    error_report = BasicErrorReportBuilder.build_error_report(
-      %ErrorReport{}, conn
-    )
-
+    error_report =
+      BasicErrorReportBuilder.build_error_report(
+        %ErrorReport{},
+        conn
+      )
 
     assert error_report == %ErrorReport{
-      metadata: %{
-        request: %{
-          request_path: "/",
-          method: "GET",
-          url: "http://#{conn.host}/?hello=computer",
-          port: 80,
-          scheme: :http,
-          query_string: "hello=computer",
-          params: %{"hello" => "computer"},
-          headers: %{
-            "accept" => "application/json",
-            "x-user-id" => "abc123"
-          },
-          client_ip: "127.0.0.1"
-        }
-      }
-    }
+             metadata: %{
+               request: %{
+                 request_path: "/",
+                 method: "GET",
+                 url: "http://#{conn.host}/?hello=computer",
+                 port: 80,
+                 scheme: :http,
+                 query_string: "hello=computer",
+                 params: %{"hello" => "computer"},
+                 headers: %{
+                   "accept" => "application/json",
+                   "x-user-id" => "abc123"
+                 },
+                 client_ip: "127.0.0.1"
+               }
+             }
+           }
   end
 
   test "filters the params defined in config" do
@@ -46,12 +47,12 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
     error_report = BasicErrorReportBuilder.build_error_report(%ErrorReport{}, conn)
 
     assert %ErrorReport{
-      metadata: %{
-        request: %{
-          params: %{"password" => "[FILTERED]", "user" => "foo", "receipt" => "[FILTERED]"}
-        }
-      }
-    } = error_report
+             metadata: %{
+               request: %{
+                 params: %{"password" => "[FILTERED]", "user" => "foo", "receipt" => "[FILTERED]"}
+               }
+             }
+           } = error_report
   end
 
   test "filters the headers defined in config" do
@@ -62,12 +63,11 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
     error_report = BasicErrorReportBuilder.build_error_report(%ErrorReport{}, conn)
 
     assert %ErrorReport{
-      metadata: %{
-        request: %{
-          headers: %{"authorization" => "[FILTERED]"}
-        }
-      }
-    } = error_report
+             metadata: %{
+               request: %{
+                 headers: %{"authorization" => "[FILTERED]"}
+               }
+             }
+           } = error_report
   end
-
 end
