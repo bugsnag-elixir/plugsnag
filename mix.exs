@@ -4,7 +4,7 @@ defmodule Plugsnag.Mixfile do
   def project do
     [
       app: :plugsnag,
-      version: "1.5.0",
+      version: "1.6.0",
       elixir: "~> 1.8",
       package: package(),
       description: "Bugsnag reporter for Elixir's Plug",
