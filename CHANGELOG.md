@@ -3,7 +3,7 @@
 ## v1.6.1
 
 ### Fixed
-- pass along stacktrace from Plug.ErrorHandler to Bugsnag [#44](https://github.com/bugsnag-elixir/bugsnag-elixir/pull/44)
+- pass along stacktrace from Plug.ErrorHandler to Bugsnag [#44](https://github.com/bugsnag-elixir/plugsnag/pull/44)
 
 ## v1.6.0
 
