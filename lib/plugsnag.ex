@@ -22,20 +22,22 @@ defmodule Plugsnag do
         do_handle_errors(conn, assigns)
       end
 
-      defp do_handle_errors(conn, %{reason: exception}) do
-        error_report_builder = unquote(
-          Keyword.get(
-            options,
-            :error_report_builder,
-            Plugsnag.BasicErrorReportBuilder
+      defp do_handle_errors(conn, %{reason: exception, stack: stack}) do
+        error_report_builder =
+          unquote(
+            Keyword.get(
+              options,
+              :error_report_builder,
+              Plugsnag.BasicErrorReportBuilder
+            )
           )
-        )
 
         options =
           %Plugsnag.ErrorReport{}
           |> error_report_builder.build_error_report(conn)
-          |> Map.from_struct
-          |> Keyword.new
+          |> Map.from_struct()
+          |> Keyword.new()
+          |> Keyword.put(:stacktrace, stack)
 
         apply(reporter(), :report, [exception | [options]])
       end
