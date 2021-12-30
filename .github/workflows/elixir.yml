@@ -36,7 +36,7 @@ jobs:
       run: |-
         mix local.rebar --force
         mix local.hex --force
-        mix deps.get
+        mix deps.get --only test
 
     - name: Check format
       if: startsWith(matrix.elixir, '1.11')
