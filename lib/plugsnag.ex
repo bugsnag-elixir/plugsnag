@@ -3,7 +3,7 @@ defmodule Plugsnag do
     quote location: :keep do
       use Plug.ErrorHandler
 
-      defp handle_errors(conn, assigns) do
+      def handle_errors(conn, assigns) do
         Plugsnag.handle_errors(conn, assigns, unquote(options))
       end
     end
