@@ -1,5 +1,11 @@
 # PdPlugsnag
 
+** DO NOT MERGE **
+
+_This branch is the `pd_plugsnag` fork, it has to be kept separate from main/master. A lot of PagerDuty projects use this repo
+as a dependency without specifying a tag and they know it by the name `plugsnag`. If this gets merged in, it's likely to 
+cause all kinds of problems._
+
 Report errors in your Plug stack or whatever to [Bugsnag](https://bugsnag.com),
 because that's a super great place to send your errors.
 

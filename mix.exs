@@ -36,8 +36,7 @@ defmodule PdPlugsnag.Mixfile do
     [{:bugsnag, "~> 1.3 or ~> 2.0 or ~> 3.0"},
      {:httpoison, "~> 1.8"},
      {:plug, "~> 1.0"},
-     {:ex_doc, "~> 0.19", only: :dev},
-     {:dialyxir, "~> 0.3.5", only: [:dev], runtime: false}
+     {:dialyxir, "~> 1.2", only: [:dev], runtime: false}
     ]
   end
 end
