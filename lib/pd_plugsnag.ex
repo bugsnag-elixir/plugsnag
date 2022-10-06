@@ -1,8 +1,8 @@
-defmodule Plugsnag do
+defmodule PdPlugsnag do
   defmacro __using__(options \\ []) do
     quote location: :keep do
       use Plug.ErrorHandler
-      import Plugsnag
+      import PdPlugsnag
 
       defp handle_errors(conn, %{reason: exception, kind: :error} = assigns) do
         # Ignore exceptions that don't get rendered as an HTTP 5xx status.
@@ -28,12 +28,12 @@ defmodule Plugsnag do
             Keyword.get(
               options,
               :error_report_builder,
-              Plugsnag.BasicErrorReportBuilder
+              PdPlugsnag.BasicErrorReportBuilder
             )
           )
 
         options =
-          %Plugsnag.ErrorReport{}
+          %PdPlugsnag.ErrorReport{}
           |> error_report_builder.build_error_report(conn)
           |> Map.from_struct()
           |> Keyword.new()
@@ -45,6 +45,6 @@ defmodule Plugsnag do
   end
 
   def reporter do
-    Application.get_env(:plugsnag, :reporter, Bugsnag)
+    Application.get_env(:pd_plugsnag, :reporter, Bugsnag)
   end
 end

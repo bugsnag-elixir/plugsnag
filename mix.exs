@@ -1,13 +1,17 @@
-defmodule Plugsnag.Mixfile do
+defmodule PdPlugsnag.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :plugsnag,
-     version: "1.4.1",
-     elixir: "~> 1.3",
+    [app: :pd_plugsnag,
+     version: "2.0.0",
+     elixir: "~> 1.8",
      package: package(),
      description: """
-       Bugsnag reporter for Elixir's Plug
+      A Bugsnag reporter for Elixir's Plug.
+
+      This is a PagerDuty fork of the plugsnag package: https://github.com/bugsnag-elixir/plugsnag
+      It has deviated a bit from the upstream project as of version 1.4.1, with no specific intention
+      of resynchronizing.
      """,
      deps: deps(),
      dialyzer: [plt_add_deps: :project]
@@ -22,14 +26,18 @@ defmodule Plugsnag.Mixfile do
   end
 
   def application do
-    [applications: []]
+    [
+      applications: [],
+      extra_applications: [:plug]
+    ]
   end
 
   defp deps do
-    [{:bugsnag, "~> 1.3 or ~> 2.0"},
+    [{:bugsnag, "~> 1.3 or ~> 2.0 or ~> 3.0"},
+     {:httpoison, "~> 1.8"},
      {:plug, "~> 1.0"},
      {:ex_doc, "~> 0.19", only: :dev},
-     {:dialyxir, "~> 0.3.5", only: [:dev]}
+     {:dialyxir, "~> 0.3.5", only: [:dev], runtime: false}
     ]
   end
 end

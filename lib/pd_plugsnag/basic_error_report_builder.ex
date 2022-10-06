@@ -1,10 +1,26 @@
-defmodule Plugsnag.BasicErrorReportBuilder do
+defmodule PdPlugsnag.BasicErrorReportBuilder do
   @moduledoc """
   Error report builder that adds basic context to the ErrorReport.
   """
   @default_filter_parameters params: ~w(password)
-  @behaviour Plugsnag.ErrorReportBuilder
+  @behaviour PdPlugsnag.ErrorReportBuilder
 
+  @spec build_error_report(%{:metadata => any, optional(any) => any}, Plug.Conn.t()) :: %{
+          :metadata => %{
+            request: %{
+              client_ip: binary,
+              headers: any,
+              method: binary,
+              params: any,
+              port: char,
+              query_string: any,
+              request_path: binary,
+              scheme: :http | :https,
+              url: nonempty_binary
+            }
+          },
+          optional(any) => any
+        }
   def build_error_report(error_report, conn) do
     %{error_report | metadata: build_metadata(conn)}
   end
@@ -51,7 +67,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   defp filters_for(field), do: do_filters_for(field)
 
   defp do_filters_for(field) do
-    Application.get_env(:plugsnag, :filter, @default_filter_parameters)
+    Application.get_env(:pd_plugsnag, :filter, @default_filter_parameters)
     |> Keyword.get(field, [])
   end
 

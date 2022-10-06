@@ -1,15 +1,19 @@
-# Plugsnag [![Build Status](https://travis-ci.org/jarednorman/plugsnag.svg?branch=master)](https://travis-ci.org/jarednorman/plugsnag)
+# PdPlugsnag
 
 Report errors in your Plug stack or whatever to [Bugsnag](https://bugsnag.com),
 because that's a super great place to send your errors.
 
+:exclamation: This is a PagerDuty fork of the plugsnag package: https://github.com/bugsnag-elixir/plugsnag
+It has deviated a bit from the upstream project as of version 1.4.1, with no specific intention
+of resynchronizing.
+
 ## Installation/Usage
 
-Just throw it in your deps in your `mix.exs`:
+Just throw it in your deps in your `mix.exs` (note that the repo name is different than the package name!):
 
 ```elixir
   defp deps do
-    [{:plugsnag, "~> 1.4.0"}]
+    [{:pd_plugsnag, github: "PagerDuty/plugsnag", tag: "pd/v1.5.0"}]
   end
 ```
 
@@ -17,37 +21,29 @@ Then you'll need to configure it with your API key as
 per [the bugsnag-elixir
 docs](https://github.com/jarednorman/bugsnag-elixir).
 
-If you're using Elixir < 1.4 make sure that `plugsnag` and `bugsnag` apps are started in your mix.exs. If you are using Elixir 1.4, the applications will be automatically started because they are dependencies.
-
-For example:
-
-```elixir
-def application do
-    [mod: {MyApp, []},
-     applications: [:logger, :plugsnag, :bugsnag]
-    ]
-  end
-```
-
 To use the plug, `use` it in your router. For example in an Phoenix app:
 
 ```elixir
 defmodule YourApp.Router do
   use Phoenix.Router
-  use Plugsnag
+  use PdPlugsnag
 
   # ...
 end
 ```
 
-### Filtering Parameters and Headers
+## Filtering Parameters and Headers
 
-By default, the `BasicErrorReportBuilder` will filter out password parameters from error reports sent to Bugsnag. You can customize this list inside your configuration:
+By default, the `BasicErrorReportBuilder` will filter out parameters name "password" from error reports sent to Bugsnag. You can customize this list inside your configuration:
 
 ```elixir
-config :plugsnag, filter: [params: ~w(password password_confirmation super_sekrit), headers: []]
-
+config :pd_plugsnag, filter: [params: ~w(password password_confirmation super_sekrit), headers: []]
 ```
+
+You can filter values from three places:
+- The request body (using the `:params` option)
+- The query string parameters (using the `:query_string` option)
+- The request headers (using the `:headers` option)
 
 ## Customizing error reporting
 
@@ -57,7 +53,7 @@ own custom ErrorReportBuilder with the `:error_report_builder` option.
 ```elixir
 defmodule YourApp.Router do
   use Phoenix.Router
-  use Plugsnag, error_report_builder: YourApp.ErrorReportBuilder
+  use PdPlugsnag, error_report_builder: YourApp.ErrorReportBuilder
 
   # ...
 end
@@ -65,11 +61,11 @@ end
 
 ```elixir
 defmodule YourApp.ErrorReportBuilder do
-  @behaviour Plugsnag.ErrorReportBuilder
+  @behaviour PdPlugsnag.ErrorReportBuilder
 
   def build_error_report(error_report, conn) do
     error_report
-    |> Plugsnag.BasicErrorReportBuilder.build_error_report(conn)
+    |> PdPlugsnag.BasicErrorReportBuilder.build_error_report(conn)
     |> put_user_info(conn)
   end
 
@@ -84,3 +80,16 @@ defmodule YourApp.ErrorReportBuilder do
   end
 end
 ```
+
+## Migrating from the Upstream `plugsnag` Package
+
+If you've been using the upstream `plugsnag` package up to version 1.4.1
+(also published to hex.pm), or the PagerDuty fork up to version 1.4.1,
+you can migrate to using this version, `pd_plugsnag` as follows:
+
+* Change any config you have for `:plugsnag` to `:pd_plugsnag`.
+* Change any module references to `Plugsnag` to `PdPlugsnag`.
+
+If you've been using either of those beyond version 1.4.1, you will need
+to check those packages for other differences they've instroduced since
+version 1.4.1

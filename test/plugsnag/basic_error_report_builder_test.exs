@@ -1,9 +1,9 @@
-defmodule Plugsnag.BasicErrorReportBuilderTest do
+defmodule PdPlugsnag.BasicErrorReportBuilderTest do
   use ExUnit.Case
   use Plug.Test
 
-  alias Plugsnag.BasicErrorReportBuilder
-  alias Plugsnag.ErrorReport
+  alias PdPlugsnag.BasicErrorReportBuilder
+  alias PdPlugsnag.ErrorReport
 
   test "build_error_report/3 adds the appropriate fields to the error report" do
     conn = conn(:get, "/?hello=computer")
@@ -39,7 +39,7 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
   end
 
   test "filters the params defined in config" do
-    Application.put_env(:plugsnag, :filter, params: ~w(password receipt))
+    Application.put_env(:pd_plugsnag, :filter, params: ~w(password receipt))
 
     conn = conn(:post, "/", %{"password" => "secret", "user" => "foo", "receipt" => "DATA"})
 
@@ -55,7 +55,7 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
   end
 
   test "filters the headers defined in config" do
-    Application.put_env(:plugsnag, :filter, headers: ~w(Authorization))
+    Application.put_env(:pd_plugsnag, :filter, headers: ~w(Authorization))
 
     conn = conn(:post, "/", "") |> put_req_header("authorization", "Bearer SOMESECRETTOKEN")
 
@@ -71,7 +71,7 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
   end
 
   test "filters the query string" do
-    Application.put_env(:plugsnag, :filter, params: ~w(signature))
+    Application.put_env(:pd_plugsnag, :filter, params: ~w(signature))
 
     conn = conn(:post, "/?signature=secret", "")
 
@@ -87,7 +87,7 @@ defmodule Plugsnag.BasicErrorReportBuilderTest do
   end
 
   test "filters the request url" do
-    Application.put_env(:plugsnag, :filter, params: ~w(signature))
+    Application.put_env(:pd_plugsnag, :filter, params: ~w(signature))
 
     conn = conn(:post, "/?signature=secret", "")
 

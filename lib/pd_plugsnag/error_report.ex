@@ -1,6 +1,6 @@
-defmodule Plugsnag.ErrorReport do
+defmodule PdPlugsnag.ErrorReport do
   @moduledoc """
-  A Plugsnag error report
+  A PdPlugsnag error report
   """
 
   @type t ::  %__MODULE__{
