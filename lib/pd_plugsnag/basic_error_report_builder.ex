@@ -5,22 +5,24 @@ defmodule PdPlugsnag.BasicErrorReportBuilder do
   @default_filter_parameters params: ~w(password)
   @behaviour PdPlugsnag.ErrorReportBuilder
 
-  @spec build_error_report(%{:metadata => any, optional(any) => any}, Plug.Conn.t()) :: %{
-          :metadata => %{
-            request: %{
-              client_ip: binary,
-              headers: any,
-              method: binary,
-              params: any,
-              port: char,
-              query_string: any,
-              request_path: binary,
-              scheme: :http | :https,
-              url: nonempty_binary
-            }
-          },
-          optional(any) => any
-        }
+  @spec build_error_report(%{:metadata => any, optional(any) => any}, Plug.Conn.t()) :: %PdPlugsnag.ErrorReport{
+    :context => nil | binary(),
+    :severity => nil | binary(),
+    :user => nil | map(),
+    :metadata => %{
+      request: %{
+        client_ip: binary,
+        headers: any,
+        method: binary,
+        params: any,
+        port: char,
+        query_string: any,
+        request_path: binary,
+        scheme: :http | :https,
+        url: nonempty_binary
+      }
+    }
+  }
   def build_error_report(error_report, conn) do
     %{error_report | metadata: build_metadata(conn)}
   end
