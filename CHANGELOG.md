@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.0
+- add for `:filter_query_string` config option to filter values from query strings.
+
 ## v1.6.1
 
 ### Fixed
