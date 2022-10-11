@@ -48,7 +48,7 @@ jobs:
             erlang: "22.3.4"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - uses: erlef/setup-beam@v1
       with:
@@ -67,3 +67,19 @@ jobs:
 
     - name: Run tests
       run: mix test
+
+    - name: Retrieve PLT Cache
+      uses: actions/cache@v3
+      id: plt-cache
+      with:
+        path: priv/plts
+        key: ${{ runner.os }}-${{ matrix.erlang }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+    
+    - name: Create PLTs
+      if: steps.plt-cache.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p priv/plts
+        MIX_ENV=test mix dialyzer --plt
+    
+    - name: Run dialyzer
+      run: MIX_ENV=test mix dialyzer --no-check
