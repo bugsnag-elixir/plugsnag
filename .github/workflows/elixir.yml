@@ -62,13 +62,14 @@ jobs:
         mix deps.get
 
     - name: Check format
-      if: startsWith(matrix.elixir, '1.11')
+      if: startsWith(matrix.elixir, '1.14')
       run: mix format --check-formatted
 
     - name: Run tests
       run: mix test
 
     - name: Retrieve PLT Cache
+      if: startsWith(matrix.elixir, '1.14')
       uses: actions/cache@v3
       id: plt-cache
       with:
@@ -76,10 +77,11 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.erlang }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
     
     - name: Create PLTs
-      if: steps.plt-cache.outputs.cache-hit != 'true'
+      if: steps.plt-cache.outputs.cache-hit != 'true' && startsWith(matrix.elixir, '1.14')
       run: |
         mkdir -p priv/plts
         MIX_ENV=test mix dialyzer --plt
     
     - name: Run dialyzer
+      if: startsWith(matrix.elixir, '1.14')
       run: MIX_ENV=test mix dialyzer --no-check
