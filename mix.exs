@@ -28,7 +28,6 @@ defmodule Plugsnag.Mixfile do
         :unmatched_returns,
         :overspecs,
         :specdiffs,
-        :extra_return,
         :missing_return
       ]
     ]
