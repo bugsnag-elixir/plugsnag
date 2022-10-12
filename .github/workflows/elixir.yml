@@ -67,9 +67,30 @@ jobs:
 
     - name: Run tests
       run: mix test
+  dialyzer:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        elixir: ["1.14.1"]
+        erlang: ["23.3.4", "24.3.4", "25.1.1"]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{matrix.erlang}}
+        elixir-version: ${{matrix.elixir}}
+
+    - name: Install dependencies
+      run: |-
+        mix local.rebar --force
+        mix local.hex --force
+        mix deps.get
 
     - name: Retrieve PLT Cache
-      if: startsWith(matrix.elixir, '1.14')
       uses: actions/cache@v3
       id: plt-cache
       with:
@@ -77,11 +98,10 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.erlang }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
     
     - name: Create PLTs
-      if: steps.plt-cache.outputs.cache-hit != 'true' && startsWith(matrix.elixir, '1.14')
+      if: steps.plt-cache.outputs.cache-hit != 'true'
       run: |
         mkdir -p priv/plts
         MIX_ENV=test mix dialyzer --plt
     
     - name: Run dialyzer
-      if: startsWith(matrix.elixir, '1.14')
-      run: MIX_ENV=test mix dialyzer --no-check
+      run: MIX_ENV=test mix dialyzer --no-check --format github

@@ -9,15 +9,28 @@ defmodule Plugsnag.Mixfile do
       package: package(),
       description: "Bugsnag reporter for Elixir's Plug",
       deps: deps(),
-      dialyzer: dialyzer(Mix.env())
+      dialyzer: dialyzer(Mix.env()),
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_env), do: ["lib"]
 
   # Setup dialyzer paths for CI Cache
   defp dialyzer(:test) do
     [
       plt_core_path: "priv/plts",
-      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+      flags: [
+        :underspecs,
+        :unknown,
+        :unmatched_returns,
+        :overspecs,
+        :specdiffs,
+        :extra_return,
+        :missing_return
+      ]
     ]
   end
 
