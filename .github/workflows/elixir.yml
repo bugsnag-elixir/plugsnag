@@ -7,30 +7,81 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         # https://github.com/elixir-lang/elixir/releases
-        elixir: ["1.11.2", "1.10.3", "1.9.4", "1.8.2"]
+        elixir: ["1.14.1", "1.13.4", "1.12.3", "1.11.4", "1.10.4", "1.9.4", "1.8.2"]
         # http://erlang.org/download/otp_versions_tree.html
-        erlang: ["21.3.8", "22.3.4"]
-        ubuntu: ["focal-20200423"]
-        include:
-          - elixir: "1.10.3"
-            erlang: "23.0"
-            ubuntu: "focal-20200423"
-          - elixir: "1.11.2"
-            erlang: "23.1.1"
-            ubuntu: "focal-20200703"
-
-    container:
-      image: hexpm/elixir:${{ matrix.elixir }}-erlang-${{ matrix.erlang }}-ubuntu-${{ matrix.ubuntu }}
+        erlang: ["21.3.8", "22.3.4", "23.3.4", "24.3.4", "25.1.1"]
+        exclude:
+          - elixir: "1.8.2"
+            erlang: "23.3.4"
+          - elixir: "1.8.2"
+            erlang: "24.3.4"
+          - elixir: "1.8.2"
+            erlang: "25.1.1"
+          - elixir: "1.9.4"
+            erlang: "23.3.4"
+          - elixir: "1.9.4"
+            erlang: "24.3.4"
+          - elixir: "1.9.4"
+            erlang: "25.1.1"
+          - elixir: "1.10.4"
+            erlang: "24.3.4"
+          - elixir: "1.10.4"
+            erlang: "25.1.1"
+          - elixir: "1.11.4"
+            erlang: "25.1.1"
+          - elixir: "1.12.3"
+            erlang: "21.3.8"
+          - elixir: "1.12.3"
+            erlang: "25.1.1"
+          - elixir: "1.13.4"
+            erlang: "21.3.8"
+          - elixir: "1.14.1"
+            erlang: "21.3.8"
+          - elixir: "1.14.1"
+            erlang: "22.3.4"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{matrix.erlang}}
+        elixir-version: ${{matrix.elixir}}
+
+    - name: Install dependencies
+      run: |-
+        mix local.rebar --force
+        mix local.hex --force
+        mix deps.get
+
+    - name: Run tests
+      run: mix test
+
+  format:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://github.com/elixir-lang/elixir/releases
+        elixir: ["1.14.1"]
+        # http://erlang.org/download/otp_versions_tree.html
+        erlang: ["25.1.1"]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{matrix.erlang}}
+        elixir-version: ${{matrix.elixir}}
 
     - name: Install dependencies
       run: |-
@@ -39,8 +90,49 @@ jobs:
         mix deps.get
 
     - name: Check format
-      if: startsWith(matrix.elixir, '1.11')
       run: mix format --check-formatted
 
-    - name: Run tests
-      run: mix test
+  dialyzer:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        elixir: ["1.14.1"]
+        erlang: ["25.1.1"]
+
+    env:
+      MIX_ENV: "test"
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{matrix.erlang}}
+        elixir-version: ${{matrix.elixir}}
+
+    - name: Install dependencies
+      run: |-
+        mix local.rebar --force
+        mix local.hex --force
+        mix deps.get
+
+    - name: Retrieve PLT Cache
+      uses: actions/cache@v3
+      id: plt-cache
+      with:
+        path: priv/plts
+        key: ${{ runner.os }}-${{ matrix.erlang }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+    
+    - name: Create PLTs
+      if: steps.plt-cache.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p priv/plts
+        mix dialyzer --plt
+    
+    - name: Compile
+      run: mix compile
+    
+    - name: Run dialyzer
+      run: mix dialyzer --no-check --format github
