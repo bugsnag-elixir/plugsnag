@@ -58,7 +58,7 @@ By default, query strings are not filtered and may still leak sensitive informat
 `:filter_query_string` config option to true:
 
 ```elixir
-config :plugsang, filter_query_string: true
+config :plugsnag, filter_query_string: true
 
 ```
 
