@@ -12,7 +12,7 @@ Just throw it in your deps in your `mix.exs`:
 
 ```elixir
   defp deps do
-    [{:plugsnag, "~> 1.4.0"}]
+    [{:plugsnag, "~> 1.7.0"}]
   end
 ```
 
@@ -50,6 +50,15 @@ By default, the `BasicErrorReportBuilder` will filter out password parameters fr
 
 ```elixir
 config :plugsnag, filter: [params: ~w(password password_confirmation super_sekrit), headers: []]
+
+```
+
+By default, query strings are not filtered and may still leak sensitive information stored there
+(which shouldn't be, anyway). To filter the query string in the generated report, set the
+`:filter_query_string` config option to true:
+
+```elixir
+config :plugsnag, filter_query_string: true
 
 ```
 
