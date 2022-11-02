@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.7.1 (2022-11-01)
+- publish `handle_errors` to avoid dialyzer error under erlang 25.1 [#53](https://github.com/bugsnag-elixir/plugsnag/pull/53)
+
+## v1.7.0 (2022-11-01)
+- add for `:filter_query_string` config option to filter values from query strings.
+
 ## v1.6.1 (2021-03-16)
 
 ### Fixed

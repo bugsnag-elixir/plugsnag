@@ -3,6 +3,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
   Error report builder that adds basic context to the ErrorReport.
   """
   @default_filter_parameters params: ~w(password)
+  @default_filter_query_string false
   @behaviour Plugsnag.ErrorReportBuilder
 
   def build_error_report(error_report, conn) do
@@ -21,7 +22,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
         url: get_full_url(conn),
         port: conn.port,
         scheme: conn.scheme,
-        query_string: conn.query_string,
+        query_string: filter(:query_string, conn.query_string),
         params: filter(:params, conn.params),
         headers: collect_req_headers(conn),
         client_ip: format_ip(conn.remote_ip)
@@ -43,7 +44,7 @@ defmodule Plugsnag.BasicErrorReportBuilder do
 
     case conn.query_string do
       "" -> base
-      qs -> "#{base}?#{qs}"
+      qs -> "#{base}?#{filter(:query_string, qs)}"
     end
   end
 
@@ -51,11 +52,27 @@ defmodule Plugsnag.BasicErrorReportBuilder do
     do_filters_for(:headers) |> Enum.map(&String.downcase/1)
   end
 
+  defp filters_for(:query_string) do
+    Application.get_env(:plugsnag, :filter_query_string, @default_filter_query_string)
+    |> if do
+      filters_for(:params)
+    else
+      []
+    end
+  end
+
   defp filters_for(field), do: do_filters_for(field)
 
   defp do_filters_for(field) do
     Application.get_env(:plugsnag, :filter, @default_filter_parameters)
     |> Keyword.get(field, [])
+  end
+
+  defp filter(:query_string, data) when is_binary(data) do
+    data
+    |> URI.decode_query()
+    |> do_filter(filters_for(:query_string))
+    |> URI.encode_query()
   end
 
   defp filter(field, data), do: do_filter(data, filters_for(field))

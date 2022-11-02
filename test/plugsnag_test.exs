@@ -2,55 +2,10 @@ defmodule PlugsnagTest do
   use ExUnit.Case
   use Plug.Test
 
-  defmodule TestException do
-    defexception plug_status: 503, message: "oops"
-  end
-
-  defmodule NotFoundException do
-    defexception plug_status: 404, message: "not found"
-  end
-
-  defmodule ErrorRaisingPlug do
-    defmacro __using__(_env) do
-      quote do
-        def call(conn, _opts) do
-          {:current_stacktrace, [_ | stacktrace]} = Process.info(self(), :current_stacktrace)
-
-          raise Plug.Conn.WrapperError,
-            conn: conn,
-            kind: :error,
-            stack: stacktrace,
-            reason: TestException.exception([])
-        end
-      end
-    end
-  end
-
-  defmodule NotFoundRaisingPlug do
-    defmacro __using__(_env) do
-      quote do
-        def call(conn, _opts) do
-          {:current_stacktrace, [_ | stacktrace]} = Process.info(self(), :current_stacktrace)
-
-          raise Plug.Conn.WrapperError,
-            conn: conn,
-            kind: :error,
-            stack: stacktrace,
-            reason: NotFoundException.exception([])
-        end
-      end
-    end
-  end
-
-  defmodule TestPlug do
-    use Plugsnag
-    use ErrorRaisingPlug
-  end
-
-  defmodule NotFoundPlug do
-    use Plugsnag
-    use NotFoundRaisingPlug
-  end
+  alias PlugsnagTest.NotFoundException
+  alias PlugsnagTest.NotFoundPlug
+  alias PlugsnagTest.TestException
+  alias PlugsnagTest.TestPlug
 
   defmodule FakePlugsnag do
     def report(exception, options \\ []) do
@@ -76,7 +31,7 @@ defmodule PlugsnagTest do
     test "calling Plugsnag.handle_errors explicitly" do
       defmodule ExtendedPlug do
         use Plug.ErrorHandler
-        use ErrorRaisingPlug
+        use PlugsnagTest.ErrorRaisingPlug
 
         defp handle_errors(conn, %{reason: _exception} = assigns) do
           send(self(), :custom_handle)
@@ -119,7 +74,7 @@ defmodule PlugsnagTest do
 
       defmodule TestPlugsnagCallbackPlug do
         use Plugsnag, error_report_builder: TestErrorReportBuilder
-        use ErrorRaisingPlug
+        use PlugsnagTest.ErrorRaisingPlug
       end
 
       conn = conn(:get, "/")
