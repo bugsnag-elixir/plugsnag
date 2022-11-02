@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.1
+- publish `handle_errors` to avoid dialyzer error under erlang 25.1 [#53](https://github.com/bugsnag-elixir/plugsnag/pull/53)
+
 ## v1.7.0
 - add for `:filter_query_string` config option to filter values from query strings.
 
