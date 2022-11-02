@@ -1,7 +1,11 @@
 # Plugsnag
+
 ![Elixir CI](https://github.com/bugsnag-elixir/plugsnag/workflows/Elixir%20CI/badge.svg)
-[![Plugsnag version](https://img.shields.io/hexpm/v/plugsnag.svg)](https://hex.pm/packages/plugsnag)
-[![Hex.pm](https://img.shields.io/hexpm/dt/plugsnag.svg)](https://hex.pm/packages/plugsnag)
+[![Hex Version](https://img.shields.io/hexpm/v/plugsnag.svg)](https://hex.pm/packages/plugsnag)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/plugsnag/)
+[![Total Download](https://img.shields.io/hexpm/dt/plugsnag.svg)](https://hex.pm/packages/plugsnag)
+[![License](https://img.shields.io/hexpm/l/plugsnag.svg)](https://github.com/bugsnag-elixir/plugsnag/blob/master/LICENSE.md)
+[![Last Updated](https://img.shields.io/github/last-commit/bugsnag-elixir/plugsnag.svg)](https://github.com/bugsnag-elixir/plugsnag/commits/master)
 
 Report errors in your Plug stack or whatever to [Bugsnag](https://bugsnag.com),
 because that's a super great place to send your errors.
@@ -11,9 +15,11 @@ because that's a super great place to send your errors.
 Just throw it in your deps in your `mix.exs`:
 
 ```elixir
-  defp deps do
-    [{:plugsnag, "~> 1.7.0"}]
-  end
+defp deps do
+  [
+    {:plugsnag, "~> 1.7.0"}
+  ]
+end
 ```
 
 Then you'll need to configure it with your API key as
@@ -97,3 +103,10 @@ defmodule YourApp.ErrorReportBuilder do
   end
 end
 ```
+
+## Copyright and License
+
+Copyright (c) 2015 Jared Norman, Andrew Harvey, Guilherme de Maio
+
+This work is free. You can redistribute it and/or modify it under the
+terms of the MIT License. See the [LICENSE.md](./LICENSE.md) file for more details.
