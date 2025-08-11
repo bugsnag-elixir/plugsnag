@@ -53,10 +53,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # https://github.com/elixir-lang/elixir/releases
-        elixir: ["1.14.1"]
-        # http://erlang.org/download/otp_versions_tree.html
-        erlang: ["25.1.1"]
+        elixir: ["1.18.4"]
+        erlang: ["27.x"]
 
     steps:
     - uses: actions/checkout@v3
@@ -84,8 +82,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        elixir: ["1.14.1"]
-        erlang: ["25.1.1"]
+        elixir: ["1.18.4"]
+        erlang: ["27.x"]
 
     env:
       MIX_ENV: "test"
