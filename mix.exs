@@ -2,7 +2,7 @@ defmodule Plugsnag.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/bugsnag-elixir/plugsnag"
-  @version "1.7.1"
+  @version "1.7.2"
 
   def project do
     [
@@ -58,8 +58,8 @@ defmodule Plugsnag.Mixfile do
     [
       {:bugsnag, "~> 1.3 or ~> 2.0 or ~> 3.0"},
       {:plug, "~> 1.0"},
-      {:ex_doc, ">= 0.0.0", only: :docs, runtime: false},
-      {:dialyxir, "~> 1.2", only: [:test], runtime: false}
+      {:ex_doc, "~> 0.30", only: :docs, runtime: false},
+      {:dialyxir, "~> 1.4", only: [:test], runtime: false}
     ]
   end
 

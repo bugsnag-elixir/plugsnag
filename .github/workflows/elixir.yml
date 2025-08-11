@@ -14,38 +14,21 @@ jobs:
       fail-fast: false
       matrix:
         # https://github.com/elixir-lang/elixir/releases
-        elixir: ["1.14.1", "1.13.4", "1.12.3", "1.11.4", "1.10.4", "1.9.4", "1.8.2"]
         # http://erlang.org/download/otp_versions_tree.html
-        erlang: ["21.3.8", "22.3.4", "23.3.4", "24.3.4", "25.1.1"]
-        exclude:
-          - elixir: "1.8.2"
-            erlang: "23.3.4"
-          - elixir: "1.8.2"
-            erlang: "24.3.4"
-          - elixir: "1.8.2"
-            erlang: "25.1.1"
+        # https://hexdocs.pm/elixir/compatibility-and-deprecations.html
+        include:
           - elixir: "1.9.4"
-            erlang: "23.3.4"
-          - elixir: "1.9.4"
-            erlang: "24.3.4"
-          - elixir: "1.9.4"
-            erlang: "25.1.1"
-          - elixir: "1.10.4"
-            erlang: "24.3.4"
-          - elixir: "1.10.4"
-            erlang: "25.1.1"
-          - elixir: "1.11.4"
-            erlang: "25.1.1"
-          - elixir: "1.12.3"
-            erlang: "21.3.8"
-          - elixir: "1.12.3"
-            erlang: "25.1.1"
-          - elixir: "1.13.4"
-            erlang: "21.3.8"
-          - elixir: "1.14.1"
-            erlang: "21.3.8"
-          - elixir: "1.14.1"
-            erlang: "22.3.4"
+            erlang: "24.x"
+          - elixir: "1.14.5"
+            erlang: "25.x"
+          - elixir: "1.15.8"
+            erlang: "26.x"
+          - elixir: "1.16.3"
+            erlang: "26.x"
+          - elixir: "1.17.3"
+            erlang: "27.x"
+          - elixir: "1.18.4"
+            erlang: "27.x"
 
     steps:
     - uses: actions/checkout@v3
@@ -70,10 +53,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # https://github.com/elixir-lang/elixir/releases
-        elixir: ["1.14.1"]
-        # http://erlang.org/download/otp_versions_tree.html
-        erlang: ["25.1.1"]
+        elixir: ["1.18.4"]
+        erlang: ["27.x"]
 
     steps:
     - uses: actions/checkout@v3
@@ -101,8 +82,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        elixir: ["1.14.1"]
-        erlang: ["25.1.1"]
+        elixir: ["1.18.4"]
+        erlang: ["27.x"]
 
     env:
       MIX_ENV: "test"
