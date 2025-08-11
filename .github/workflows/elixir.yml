@@ -16,7 +16,7 @@ jobs:
         # https://github.com/elixir-lang/elixir/releases
         elixir: ["1.14.1", "1.13.4", "1.12.3", "1.11.4", "1.10.4", "1.9.4", "1.8.2"]
         # http://erlang.org/download/otp_versions_tree.html
-        erlang: ["21.3.8", "22.3.4", "23.3.4", "24.3.4", "25.1.1"]
+        erlang: ["21.x", "22.x", "23.x", "24.x", "25.x"]
         exclude:
           - elixir: "1.8.2"
             erlang: "23.3.4"
