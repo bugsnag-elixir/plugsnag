@@ -46,6 +46,7 @@ defmodule Plugsnag.Mixfile do
       contributors: ["Jared Norman", "Andrew Harvey", "Guilherme de Maio"],
       maintainers: ["Andrew Harvey", "Guilherme de Maio"],
       licenses: ["MIT"],
+      files: ~w(lib .formatter.exs mix.exs README.md LICENSE.md CHANGELOG.md),
       links: %{
         Changelog: "https://hexdocs.pm/plugsnag/changelog.html",
         GitHub: @source_url
