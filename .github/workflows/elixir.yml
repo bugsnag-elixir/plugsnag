@@ -20,7 +20,7 @@ jobs:
           - elixir: "1.9.4"
             erlang: "24.x"
           - elixir: "1.14.5"
-            erlang: "23.x"
+            erlang: "25.x"
           - elixir: "1.15.8"
             erlang: "26.x"
           - elixir: "1.16.3"
